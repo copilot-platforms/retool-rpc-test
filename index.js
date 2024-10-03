@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { RetoolRPC } from "retoolrpc"
-import { copilotApi } from 'copilot-node-sdk/dist/api'
+import { copilotApi } from 'copilot-node-sdk/dist/api/init.js'
 
 const rpc = new RetoolRPC({
   apiToken: process.env.API_TOKEN,
