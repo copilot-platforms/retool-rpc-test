@@ -1,4 +1,6 @@
+import 'dotenv/config'
 import { RetoolRPC } from "retoolrpc"
+import { copilotApi } from 'copilot-node-sdk';
 
 const rpc = new RetoolRPC({
   apiToken: process.env.API_TOKEN,
@@ -10,16 +12,24 @@ const rpc = new RetoolRPC({
   logLevel: 'info', // use 'debug' for more verbose logging
 })
 
+const getTokenPayload = async (token) => {
+  
+  const copilot = copilotApi({
+    apiKey: process.env.COPILOT_API_KEY,
+    token,
+  });
+
+  return copilot.getTokenPayload?.();
+}
+
 rpc.register({
-  name: 'helloWorld',
+  name: 'getTokenPayload',
   arguments: {
-    name: { type: 'string', description: 'Your name', required: true },
+    token: { type: 'string', description: 'token from url params. Use {{ urlparams.token }}', required: true },
   },
-  implementation: async (args, context) => {
-    return {
-      message: `Hello ${args.name}`,
-      context,
-    }
+  implementation: async (args) => {
+    const payload = await getTokenPayload(args.token);
+    return payload;
   },
 })
 
